@@ -4,13 +4,17 @@
   "description": "",
   "main": "lib/main.js",
   "scripts": {
+    "start": "node lib/main.js",
+    "dev": "nodemon lib/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "author": "Mykola Kushnir <mykola.kushnir.825@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.29.1"
+    "eslint-plugin-import": "^2.29.1",
+    "nodemon": "^3.1.2"
   }
 }
