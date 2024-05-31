@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node lib/main.js",
     "dev": "nodemon lib/main.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "lint": "eslint .",
+    "fmt": "eslint --fix ."
   },
   "type": "module",
   "author": "Mykola Kushnir <mykola.kushnir.825@gmail.com>",

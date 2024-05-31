@@ -2,7 +2,8 @@
     "env": {
         "browser": true,
         "es2021": true,
-        "node": true
+        "node": true,
+        "jest": true
     },
     "extends": "airbnb-base",
     "parserOptions": {
@@ -11,6 +12,11 @@
     },
     "rules": {
         "no-console": "off",
-        "import/extensions": [2, "ignorePackages"]
+        "import/extensions": [2, "ignorePackages"],
+        "import/no-extraneous-dependencies": [
+          "error", {
+            "devDependencies": ["test/**.test.js"]
+          }
+      ]
     }
 }
