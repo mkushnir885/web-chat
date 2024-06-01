@@ -5,7 +5,7 @@ import {
   expect, test,
 } from '@jest/globals';
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
-import readStaticFile from '../lib/read-static-file.js';
+import sendStatic from '../lib/controllers/send-static.js';
 
 describe('Function getStaticFile', () => {
   beforeAll(() => {
@@ -18,7 +18,7 @@ describe('Function getStaticFile', () => {
   });
 
   test('existing file', () => {
-    readStaticFile('test/public/existing.html').then(
+    sendStatic('test/public/existing.html').then(
       (fileContent) => expect(fileContent).toBe('Some html'),
       (err) => expect(err).toBeNull(),
     );
@@ -26,7 +26,7 @@ describe('Function getStaticFile', () => {
 
   test('non-existent file', async () => {
     try {
-      await readStaticFile('test/public/non-existent.html');
+      await sendStatic('test/public/non-existent.html');
     } catch (err) {
       expect(err).toBeInstanceOf(Error);
       const { statusCode, message } = err;
