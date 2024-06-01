@@ -5,33 +5,60 @@ import {
   expect, test,
 } from '@jest/globals';
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
-import sendStatic from '../lib/controllers/send-static.js';
+import sendStatic from '../../lib/controllers/send-static.js';
 
-describe('Function getStaticFile', () => {
+const getReqInstance = (url) => ({ url });
+
+const getResInstance = () => ({
+  headers: new Map(),
+  setHeader(name, value) {
+    this.headers.set(name, value);
+  },
+  end(data) {
+    this.body = data;
+  },
+});
+
+describe('Controller sendStatic', () => {
   beforeAll(() => {
     mkdirSync('./test/public');
-    writeFileSync('./test/public/existing.html', 'Some html');
   });
 
   afterAll(() => {
     rmSync('./test/public', { recursive: true, force: true });
   });
 
-  test('existing file', () => {
-    sendStatic('test/public/existing.html').then(
-      (fileContent) => expect(fileContent).toBe('Some html'),
-      (err) => expect(err).toBeNull(),
-    );
+  test('existing known file', async () => {
+    writeFileSync('./test/public/index.html', 'Some html');
+    const req = getReqInstance('/../test/public/index.html');
+    const res = getResInstance();
+
+    await sendStatic(req, res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.headers.get('ContentType')).toBe('text/html');
+    expect(res.body).toBe('Some html');
+  });
+
+  test('existing unknown file', async () => {
+    writeFileSync('./test/public/music.mp3', 'Some sound');
+    const req = getReqInstance('/../test/public/music.mp3');
+    const res = getResInstance();
+
+    await sendStatic(req, res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.headers.get('ContentType')).toBeUndefined();
+    expect(res.body).toBe('Some sound');
   });
 
   test('non-existent file', async () => {
-    try {
-      await sendStatic('test/public/non-existent.html');
-    } catch (err) {
-      expect(err).toBeInstanceOf(Error);
-      const { statusCode, message } = err;
-      expect(statusCode).toBe(404);
-      expect(message).toBe('File non-existent.html not found');
-    }
+    const req = getReqInstance('/../test/public/script.js');
+    const res = getResInstance();
+
+    await sendStatic(req, res);
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body).toBe('File script.js not found');
   });
 });
