@@ -1,4 +1,4 @@
-import { formatDateFromTimestamp } from '../utils/dateUtils.js';
+import formatDateFromTimestamp from '../utils/dateUtils.js';
 
 const createMessageElement = ({ author, timestamp, body }, isOwnMessage) => {
   const msgContainer = document.createElement('div');
