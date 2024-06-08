@@ -1,4 +1,7 @@
+import EventEmitter from 'events';
 import formatDateFromTimestamp from '../utils/dateUtils.js';
+
+const eventEmitter = new EventEmitter();
 
 const createMessageElement = ({ author, timestamp, body }, isOwnMessage) => {
   const msgContainer = document.createElement('div');
@@ -46,16 +49,18 @@ ws.addEventListener('open', () => {
   ws.send(JSON.stringify({ event: 'USER_ONLINE', user }));
 });
 
+eventEmitter.on('CHAT_MESSAGE', (data) => {
+  const { message } = data;
+  if (message.author === user.name) outputMyMessage(message);
+  else outputSomeoneMessage(message);
+});
+
 ws.addEventListener('message', (obj) => {
   const str = obj.data;
   const data = JSON.parse(str);
 
   const { event } = data;
-  if (event === 'CHAT_MESSAGE') {
-    const { message } = data;
-    if (message.author === user.name) outputMyMessage(message);
-    else outputSomeoneMessage(message);
-  }
+  eventEmitter.emit(event, data);
   // TODO: handle the chat history fetch event
 });
 
