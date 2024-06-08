@@ -17,7 +17,7 @@ const submitForm = async (event) => {
       window.location.href = '/account';
     } else {
       const resBody = await res.json();
-      alert(resBody.err);
+      alert(resBody.errorMessage);
     }
   } catch (err) {
     alert(err.message);
