@@ -14,13 +14,38 @@ const submitForm = async (event) => {
     });
 
     const resBody = await res.json();
-    if (res.status === 200) alert(resBody.message);
-    else alert(resBody.errMessage);
+    if (res.status === 202) alert(resBody.message);
+    else alert(resBody.errorMessage);
+    form.reset();
   } catch (err) {
     alert(err.message);
   }
 };
 
 window.addEventListener('load', () => {
-  document.getElementById('form-login').addEventListener('submit', submitForm);
+  document.getElementById('form-account').addEventListener('submit', submitForm);
+
+  const logoutBtn = document.getElementById('btn-logout');
+  logoutBtn.addEventListener('click', async () => {
+    try {
+      const res = await fetch('/logout', { method: 'DELETE' });
+      const resBody = await res.json();
+      if (res.status === 200) window.location.href = '/';
+      else alert(resBody.errorMessage);
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+
+  const deleteBtn = document.getElementById('btn-delete');
+  deleteBtn.addEventListener('click', async () => {
+    try {
+      const res = await fetch('/account', { method: 'DELETE' });
+      const resBody = await res.json();
+      if (res.status === 200) window.location.href = '/';
+      else alert(resBody.errorMessage);
+    } catch (err) {
+      alert(err.message);
+    }
+  });
 });

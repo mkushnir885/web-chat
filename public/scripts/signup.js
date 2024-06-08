@@ -26,11 +26,11 @@ const submitForm = async (event) => {
       body: new URLSearchParams(formData).toString(),
     });
 
-    if (res.status === 202) {
+    if (res.status === 201) {
       window.location.href = '/account';
     } else {
       const resBody = await res.json();
-      alert(resBody.err);
+      alert(resBody.errorMessage);
     }
   } catch (err) {
     alert(err.message);
