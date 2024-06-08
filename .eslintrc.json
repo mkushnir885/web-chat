@@ -13,6 +13,7 @@
     "rules": {
         "no-console": "off",
         "no-alert": "off",
+        "no-useless-constructor": "off",
         "import/extensions": [2, "ignorePackages"],
         "import/no-extraneous-dependencies": [
           "error", {
