@@ -35,7 +35,7 @@ describe('Database', () => {
   it('replace: fields, setValues', () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    db.add('user').fields(['nickname', 'password']).setValues(['sigma777', 'kolya@sigma777']).run();
+    db.replace('user').fields(['nickname', 'password']).setValues(['sigma777', 'kolya@sigma777']).run();
     expect(db.execute).toHaveBeenCalledWith('REPLACE INTO user(nickname, password) VALUES(?, ?);', ['sigma777', 'kolya@sigma777']);
   });
 
