@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS web_chat.user (
     ENGINE = InnoDB
     AUTO_INCREMENT = 12
     DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
 -- Table web_chat.chat_message
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS web_chat.chat_message (
     ON UPDATE NO ACTION)
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
 -- Table web_chat.session
@@ -59,8 +59,7 @@ CREATE TABLE IF NOT EXISTS web_chat.session (
     UNIQUE INDEX id_UNIQUE (token ASC) VISIBLE)
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
+    COLLATE = utf8mb4_0900_ai_ci;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
