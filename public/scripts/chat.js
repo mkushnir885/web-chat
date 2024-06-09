@@ -41,9 +41,6 @@ fetch('/chat/server')
 
     eventEmitter.onEvent('CHAT_HISTORY', (data) => {
       const { messages } = data;
-
-      console.log(messages);
-
       messages.forEach((message) => {
         if (message.author === user.name) outputMyMessage(message);
         else outputSomeoneMessage(message);
@@ -62,6 +59,10 @@ fetch('/chat/server')
 
       const { event } = data;
       eventEmitter.emitEvent(event, data);
+    });
+
+    ws.addEventListener('close', (obj) => {
+      alert(obj.reason);
     });
 
     const btnSend = document.getElementById('send-msg');
