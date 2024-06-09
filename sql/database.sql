@@ -34,12 +34,11 @@ CREATE TABLE IF NOT EXISTS web_chat.user (
 CREATE TABLE IF NOT EXISTS web_chat.chat_message (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     body VARCHAR(1024) NOT NULL,
-    time INT NOT NULL,
+    timestamp BIGINT(8) NOT NULL,
     user_id INT UNSIGNED NOT NULL,
     PRIMARY KEY (id, user_id),
     UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,
     INDEX fk_chat_message_user1_idx (user_id ASC) VISIBLE,
-    UNIQUE INDEX user_id_UNIQUE (user_id ASC) VISIBLE,
     CONSTRAINT fk_chat_message_user1
     FOREIGN KEY (user_id)
     REFERENCES web_chat.user (id)
