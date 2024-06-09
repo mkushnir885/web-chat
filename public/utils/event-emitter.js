@@ -40,7 +40,7 @@ export default class EventEmitter {
   emitEvent(eventName, ...args) {
     const event = this.events.get(eventName);
     if (!event) return;
-    event.values().forEach((listener) => listener(...args));
+    event.forEach((listener) => listener(...args));
   }
 
   eventNames() {
