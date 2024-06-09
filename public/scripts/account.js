@@ -49,3 +49,8 @@ window.addEventListener('load', () => {
     }
   });
 });
+
+const btnChat = document.getElementById('go-to-chat');
+btnChat.addEventListener('click', () => {
+  window.location.href = '/chat';
+});
