@@ -32,6 +32,13 @@ describe('Database', () => {
     expect(db.execute).toHaveBeenCalledWith('INSERT INTO user(nickname, password) VALUES(?, ?);', ['sigma777', 'kolya@sigma777']);
   });
 
+  it('replace: fields, setValues', () => {
+    const db = open({}, console);
+    db.execute = jest.fn();
+    db.replace('user').fields(['nickname', 'password']).setValues(['sigma777', 'kolya@sigma777']).run();
+    expect(db.execute).toHaveBeenCalledWith('REPLACE INTO user(nickname, password) VALUES(?, ?);', ['sigma777', 'kolya@sigma777']);
+  });
+
   it('value', () => {
     const db = open({}, console);
     db.execute = jest.fn();

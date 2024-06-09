@@ -33,7 +33,7 @@ describe('Controller sendStatic', () => {
     const req = getReqInstance('/../test/public/index.html');
     const res = getResInstance();
 
-    await sendStatic(req, res);
+    await sendStatic({ req, res });
 
     expect(res.statusCode).toBe(200);
     expect(res.headers.get('ContentType')).toBe('text/html');
@@ -45,7 +45,7 @@ describe('Controller sendStatic', () => {
     const req = getReqInstance('/../test/public/music.mp3');
     const res = getResInstance();
 
-    await sendStatic(req, res);
+    await sendStatic({ req, res });
 
     expect(res.statusCode).toBe(200);
     expect(res.headers.get('ContentType')).toBeUndefined();
@@ -56,7 +56,7 @@ describe('Controller sendStatic', () => {
     const req = getReqInstance('/../test/public/script.js');
     const res = getResInstance();
 
-    await sendStatic(req, res);
+    await sendStatic({ req, res });
 
     expect(res.statusCode).toBe(404);
     expect(res.body).toBe('File script.js not found');

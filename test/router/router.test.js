@@ -4,12 +4,14 @@ import SubRouter from '../../lib/router/sub-router.js';
 
 describe('Module Router', () => {
   const rootSubRouter = new SubRouter();
-  rootSubRouter.get('/', async (req, res) => {
+  rootSubRouter.get('/', async (client) => {
+    const { res } = client;
     res.statusCode = 200;
   });
 
   const chatSubRouter = new SubRouter();
-  chatSubRouter.get('/', async (req, res) => {
+  chatSubRouter.get('/', async (client) => {
+    const { res } = client;
     res.statusCode = 200;
   });
 
@@ -27,7 +29,7 @@ describe('Module Router', () => {
     const res = {};
 
     const handler = router.getHandler(req);
-    await handler(req, res);
+    await handler({ req, res });
 
     expect(res.statusCode).toBe(200);
   });
@@ -37,7 +39,7 @@ describe('Module Router', () => {
     const res = {};
 
     const handler = router.getHandler(req);
-    await handler(req, res);
+    await handler({ req, res });
 
     expect(res.statusCode).toBe(200);
   });
