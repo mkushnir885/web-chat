@@ -27,7 +27,7 @@ const submitForm = async (event) => {
     });
 
     if (res.status === 201) {
-      window.location.href = '/account';
+      window.location.href = '/chat';
     } else {
       const resBody = await res.json();
       alert(resBody.errorMessage);
