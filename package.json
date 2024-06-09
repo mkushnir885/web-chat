@@ -5,7 +5,9 @@
   "main": "lib/main.js",
   "scripts": {
     "start": "node lib/main.js",
+    "ws": "node lib/ws/main.js",
     "dev": "nodemon lib/main.js",
+    "dev:ws": "nodemon lib/ws/main.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "lint": "eslint .",
     "fmt": "eslint --fix ."
