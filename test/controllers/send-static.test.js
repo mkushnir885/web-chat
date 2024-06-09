@@ -36,7 +36,7 @@ describe('Controller sendStatic', () => {
     await sendStatic({ req, res });
 
     expect(res.statusCode).toBe(200);
-    expect(res.headers.get('ContentType')).toBe('text/html');
+    expect(res.headers.get('Content-Type')).toBe('text/html');
     expect(res.body).toBe('Some html');
   });
 
@@ -48,7 +48,7 @@ describe('Controller sendStatic', () => {
     await sendStatic({ req, res });
 
     expect(res.statusCode).toBe(200);
-    expect(res.headers.get('ContentType')).toBeUndefined();
+    expect(res.headers.get('Content-Type')).toBeUndefined();
     expect(res.body).toBe('Some sound');
   });
 
