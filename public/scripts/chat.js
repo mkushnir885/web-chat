@@ -1,4 +1,4 @@
-import EventEmitter from 'events';
+import EventEmitter from '../utils/event-emitter.js';
 import formatDateFromTimestamp from '../utils/dateUtils.js';
 
 const eventEmitter = new EventEmitter();
@@ -49,7 +49,7 @@ ws.addEventListener('open', () => {
   ws.send(JSON.stringify({ event: 'USER_ONLINE', user }));
 });
 
-eventEmitter.on('CHAT_MESSAGE', (data) => {
+eventEmitter.onEvent('CHAT_MESSAGE', (data) => {
   const { message } = data;
   if (message.author === user.name) outputMyMessage(message);
   else outputSomeoneMessage(message);
@@ -60,7 +60,7 @@ ws.addEventListener('message', (obj) => {
   const data = JSON.parse(str);
 
   const { event } = data;
-  eventEmitter.emit(event, data);
+  eventEmitter.emitEvent(event, data);
   // TODO: handle the chat history fetch event
 });
 
