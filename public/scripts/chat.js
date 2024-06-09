@@ -28,49 +28,56 @@ const outputMyMessage = (message) => createMessageElement(message, true);
 
 const outputSomeoneMessage = (message) => createMessageElement(message, false);
 
-// TODO: Replace with actual user
-const generateUser = () => {
-  const letters = 'abcdefghijklmnopqrstuvwxyz';
-  const nameLength = 10;
-  let name = '';
-  for (let i = 0; i < nameLength; i += 1) {
-    const index = Math.floor(Math.random() * letters.length);
-    name += letters[index];
-  }
-  const maxUserId = 100;
-  const id = Math.floor(Math.random() * maxUserId) + 1;
-  return { name, id };
-};
+fetch('/chat/server')
+  .then((res) => res.text())
+  .then((url) => {
+    const [server, query] = url.split('?');
+    const user = Object.fromEntries(new URLSearchParams(query));
+    const ws = new WebSocket(server);
 
-const ws = new WebSocket('ws://localhost:8090');
+    ws.addEventListener('open', () => {
+      ws.send(JSON.stringify({ event: 'USER_ONLINE', user }));
+    });
 
-const user = generateUser();
-ws.addEventListener('open', () => {
-  ws.send(JSON.stringify({ event: 'USER_ONLINE', user }));
-});
+    eventEmitter.onEvent('CHAT_HISTORY', (data) => {
+      const { messages } = data;
 
-eventEmitter.onEvent('CHAT_MESSAGE', (data) => {
-  const { message } = data;
-  if (message.author === user.name) outputMyMessage(message);
-  else outputSomeoneMessage(message);
-});
+      console.log(messages);
 
-ws.addEventListener('message', (obj) => {
-  const str = obj.data;
-  const data = JSON.parse(str);
+      messages.forEach((message) => {
+        if (message.author === user.name) outputMyMessage(message);
+        else outputSomeoneMessage(message);
+      });
+    });
 
-  const { event } = data;
-  eventEmitter.emitEvent(event, data);
-  // TODO: handle the chat history fetch event
-});
+    eventEmitter.onEvent('CHAT_MESSAGE', (data) => {
+      const { message } = data;
+      if (message.author === user.name) outputMyMessage(message);
+      else outputSomeoneMessage(message);
+    });
 
-const btnSend = document.getElementById('send-msg');
-btnSend.addEventListener('click', () => {
-  const input = document.getElementById('write-msg');
-  const body = input.value;
+    ws.addEventListener('message', (obj) => {
+      const str = obj.data;
+      const data = JSON.parse(str);
 
-  if (body) {
-    ws.send(JSON.stringify({ event: 'CHAT_MESSAGE', body }));
-    input.value = '';
-  }
-});
+      const { event } = data;
+      eventEmitter.emitEvent(event, data);
+    });
+
+    const btnSend = document.getElementById('send-msg');
+    btnSend.addEventListener('click', () => {
+      const input = document.getElementById('write-msg');
+      const body = input.value;
+
+      if (body) {
+        ws.send(JSON.stringify({ event: 'CHAT_MESSAGE', body }));
+        input.value = '';
+      }
+    });
+
+    const bntAccount = document.getElementById('go-to-acc');
+    bntAccount.addEventListener('click', () => {
+      ws.close();
+      window.location.href = '/account';
+    });
+  });
