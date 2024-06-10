@@ -5,7 +5,7 @@ import {
   expect, test,
 } from '@jest/globals';
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
-import sendStatic from '../../lib/controllers/send-static.js';
+import sendStatic from '../../../lib/http/controllers/send-static.js';
 
 const getReqInstance = (url) => ({ url });
 

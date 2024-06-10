@@ -1,8 +1,8 @@
 const validateForm = (formData) => {
-  const pass = formData.get('pass');
-  const passConfirm = formData.get('pass_confirm');
+  const password = formData.get('password');
+  const passwordConfirm = formData.get('password_confirm');
 
-  if (pass !== passConfirm) {
+  if (password !== passwordConfirm) {
     alert('Passwords do not match.');
     return false;
   }

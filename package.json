@@ -1,20 +1,29 @@
 {
   "name": "web-chat",
   "version": "1.0.0",
-  "description": "",
-  "main": "lib/main.js",
+  "description": "A simple, minimal-dependency web chat with authentication",
+  "homepage": "https://github.com/kushnirko/web-chat#readme",
+  "license": "MIT",
+  "authors": [
+    "Mykola Kushnir <mykola.kushnir.825@gmail.com>",
+    "Maksym Yatsenko <saddas1rambler@gmail.com>"
+  ],
+  "repository": "github:kushnirko/web-chat",
+  "type": "module",
   "scripts": {
-    "start": "node lib/main.js",
+    "http": "node lib/http/main.js",
     "ws": "node lib/ws/main.js",
-    "dev": "nodemon lib/main.js",
-    "dev:ws": "nodemon lib/ws/main.js",
+    "dev:http": "node --watch lib/http/main.js",
+    "dev:ws": "node --watch lib/ws/main.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "lint": "eslint .",
     "fmt": "eslint --fix ."
   },
-  "type": "module",
-  "author": "Mykola Kushnir <mykola.kushnir.825@gmail.com>",
-  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.10.0",
+    "ws": "^8.17.0"
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
@@ -24,12 +33,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
     "jest": "^29.7.0",
-    "jest-mock-extended": "^3.0.7",
-    "nodemon": "^3.1.2"
+    "jest-mock-extended": "^3.0.7"
   },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "mysql2": "^3.10.0",
-    "ws": "^8.17.0"
-  }
+  "private": true
 }

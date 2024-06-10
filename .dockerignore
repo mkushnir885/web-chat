@@ -1,0 +1,17 @@
+test/
+.idea/
+.github/
+node_modules/
+
+*Dockerfile
+.dockerignore
+docker-compose.yml
+
+.editorconfig
+
+.gitignore
+
+.eslintrc*
+.eslintignore
+
+README*
