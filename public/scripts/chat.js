@@ -1,5 +1,5 @@
-import EventEmitter from '../utils/event-emitter.js';
-import formatDateFromTimestamp from '../utils/dateUtils.js';
+import EventEmitter from './modules/event-emitter.js';
+import formatDateFromTimestamp from './modules/dateUtils.js';
 
 const eventEmitter = new EventEmitter();
 

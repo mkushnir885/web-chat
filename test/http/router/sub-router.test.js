@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import SubRouter from '../../lib/router/sub-router.js';
+import SubRouter from '../../../lib/http/router/sub-router.js';
 
 describe('Module SubRouter', () => {
   const subRouter = new SubRouter();
