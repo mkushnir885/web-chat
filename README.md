@@ -1,4 +1,8 @@
-# web-chat
+# Web-chat
+
+This project implements the basic functionality of web chat, which allows users to log in and exchange messages in real time. One of the key features is the minimization of external dependencies to ensure full control over the code base. The project has been developed taking into account the principles of extensibility and modularity, which allows you to easily add new functions or change existing ones.
+
+The project uses Docker-Compose to provide easy deployment and management of the development environment, which adds convenience and improves opportunities for further development.
 
 ## How to run
 
@@ -41,3 +45,8 @@ docker compose up
 ```
 
 This command will create three interconnected containers for the MySQL, HTTP, and WebSocket servers. The application will be available at http://localhost:8080.
+
+## Contributors
+
+- [Mykola Kushnir](https://github.com/kushnirko)
+- [Maksym Yatsenko](https://github.com/yatsenkoM)
