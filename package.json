@@ -17,8 +17,7 @@
     "dev:ws": "node --watch lib/ws/main.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "lint": "eslint .",
-    "fmt": "prettier --write .",
-    "prepare": "husky"
+    "fmt": "prettier --write ."
   },
   "engines": {
     "node": ">=12.0.0"
