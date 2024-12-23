@@ -2,13 +2,13 @@
   "name": "web-chat",
   "version": "1.0.0",
   "description": "A simple, minimal-dependency web chat with authentication",
-  "homepage": "https://github.com/kushnirko/web-chat#readme",
+  "homepage": "https://github.com/mkushnir885/web-chat#readme",
   "license": "MIT",
   "authors": [
-    "Mykola Kushnir <mykola.kushnir.825@gmail.com>",
+    "Mykola Kushnir <mkushnir885@gmail.com>",
     "Maksym Yatsenko <saddas1rambler@gmail.com>"
   ],
-  "repository": "github:kushnirko/web-chat",
+  "repository": "github:mkushnir885/web-chat",
   "type": "module",
   "scripts": {
     "http": "node lib/http/main.js",

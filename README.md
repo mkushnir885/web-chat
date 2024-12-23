@@ -48,5 +48,5 @@ This command will create three interconnected containers for the MySQL, HTTP, an
 
 ## Contributors
 
-- [Mykola Kushnir](https://github.com/kushnirko)
+- [Mykola Kushnir](https://github.com/mkushnir885)
 - [Maksym Yatsenko](https://github.com/yatsenkoM)
