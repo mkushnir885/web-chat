@@ -1,23 +1,23 @@
 .chat-messages {
-    width: 50%;
-    height: 500px;
-    margin: 10px 0 10px;
-    border: 2px solid black;
-    overflow-y: scroll;
+  width: 50%;
+  height: 500px;
+  margin: 10px 0 10px;
+  border: 2px solid black;
+  overflow-y: scroll;
 }
 
 .chat-message {
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    padding: 5px 10px 5px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  padding: 5px 10px 5px;
 }
 
 .msg-author {
-    color: red;
-    font-weight: bold;
+  color: red;
+  font-weight: bold;
 }
 
 .msg-time {
-    color: blue;
-    font-style: italic;
+  color: blue;
+  font-style: italic;
 }

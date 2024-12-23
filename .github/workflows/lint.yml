@@ -1,21 +1,21 @@
-name: 'Check code style'
+name: "Check code style"
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout repository'
+      - name: "Checkout repository"
         uses: actions/checkout@v4
 
-      - name: 'Set up Node.js'
+      - name: "Set up Node.js"
         uses: actions/setup-node@v4
         with:
           node-version: 20.12.0
 
-      - name: 'Install necessary ESLint packages'
+      - name: "Install necessary ESLint packages"
         run: npm install eslint eslint-config-airbnb-base eslint-plugin-import
 
-      - name: 'Run ESLint'
+      - name: "Run ESLint"
         run: npm run lint

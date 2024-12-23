@@ -12,7 +12,7 @@ Then, in the root directory of the project, create a `.env` file and specify the
 
 ```bash
 # HTTP server configuration
-HTTP_HOST=... # Hostname of HTTP server (default: "localhost") 
+HTTP_HOST=... # Hostname of HTTP server (default: "localhost")
 HTTP_PORT=... # Port of HTTP server (default: 8000)
 
 # WebSocket server configuration

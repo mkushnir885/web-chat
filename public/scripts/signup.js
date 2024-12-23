@@ -1,9 +1,9 @@
 const validateForm = (formData) => {
-  const password = formData.get('password');
-  const passwordConfirm = formData.get('password_confirm');
+  const password = formData.get("password");
+  const passwordConfirm = formData.get("password_confirm");
 
   if (password !== passwordConfirm) {
-    alert('Passwords do not match.');
+    alert("Passwords do not match.");
     return false;
   }
   return true;
@@ -21,13 +21,13 @@ const submitForm = async (event) => {
     const res = await fetch(form.action, {
       method: form.method,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams(formData).toString(),
     });
 
     if (res.status === 201) {
-      window.location.href = '/chat';
+      window.location.href = "/chat";
     } else {
       const resBody = await res.json();
       alert(resBody.errorMessage);
@@ -37,6 +37,6 @@ const submitForm = async (event) => {
   }
 };
 
-window.addEventListener('load', () => {
-  document.getElementById('form-signup').addEventListener('submit', submitForm);
+window.addEventListener("load", () => {
+  document.getElementById("form-signup").addEventListener("submit", submitForm);
 });

@@ -1,108 +1,138 @@
-import {
-  afterEach, describe, expect, it, jest,
-} from '@jest/globals';
-import open from '../../lib/database/database.js';
+import { afterEach, describe, expect, it, jest } from "@jest/globals";
+import open from "../../lib/database/database.js";
 
-describe('Database', () => {
-  it('select: where', () => {
+describe("Database", () => {
+  it("select: where", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    db.select('user').where({ id: 1 }).run();
-    expect(db.execute).toHaveBeenCalledWith('SELECT * FROM user WHERE id = ?;', [1]);
+    db.select("user").where({ id: 1 }).run();
+    expect(db.execute).toHaveBeenCalledWith(
+      "SELECT * FROM user WHERE id = ?;",
+      [1],
+    );
   });
 
-  it('select: fields', () => {
+  it("select: fields", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    db.select('user').fields(['id', 'nickname']).run();
-    expect(db.execute).toHaveBeenCalledWith('SELECT id, nickname FROM user;', []);
+    db.select("user").fields(["id", "nickname"]).run();
+    expect(db.execute).toHaveBeenCalledWith(
+      "SELECT id, nickname FROM user;",
+      [],
+    );
   });
 
-  it('select: fields', () => {
+  it("select: fields", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    db.select('user').fields(['id', 'nickname']).run();
-    expect(db.execute).toHaveBeenCalledWith('SELECT id, nickname FROM user;', []);
+    db.select("user").fields(["id", "nickname"]).run();
+    expect(db.execute).toHaveBeenCalledWith(
+      "SELECT id, nickname FROM user;",
+      [],
+    );
   });
 
-  it('add: fields, setValues', () => {
+  it("add: fields, setValues", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    db.add('user').fields(['nickname', 'password']).setValues(['sigma777', 'kolya@sigma777']).run();
-    expect(db.execute).toHaveBeenCalledWith('INSERT INTO user(nickname, password) VALUES(?, ?);', ['sigma777', 'kolya@sigma777']);
+    db.add("user")
+      .fields(["nickname", "password"])
+      .setValues(["sigma777", "kolya@sigma777"])
+      .run();
+    expect(db.execute).toHaveBeenCalledWith(
+      "INSERT INTO user(nickname, password) VALUES(?, ?);",
+      ["sigma777", "kolya@sigma777"],
+    );
   });
 
-  it('replace: fields, setValues', () => {
+  it("replace: fields, setValues", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    db.replace('user').fields(['nickname', 'password']).setValues(['sigma777', 'kolya@sigma777']).run();
-    expect(db.execute).toHaveBeenCalledWith('REPLACE INTO user(nickname, password) VALUES(?, ?);', ['sigma777', 'kolya@sigma777']);
+    db.replace("user")
+      .fields(["nickname", "password"])
+      .setValues(["sigma777", "kolya@sigma777"])
+      .run();
+    expect(db.execute).toHaveBeenCalledWith(
+      "REPLACE INTO user(nickname, password) VALUES(?, ?);",
+      ["sigma777", "kolya@sigma777"],
+    );
   });
 
-  it('value', () => {
+  it("value", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    const instance = db.select('user').value('nickname').where({ id: 3 });
+    const instance = db.select("user").value("nickname").where({ id: 3 });
     expect(instance.mode).toBe(1);
-    expect(instance.valueName).toBe('nickname');
+    expect(instance.valueName).toBe("nickname");
   });
 
-  it('row', () => {
+  it("row", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    const instance = db.select('user').row().where({ id: 3 });
+    const instance = db.select("user").row().where({ id: 3 });
     expect(instance.mode).toBe(2);
   });
 
-  it('col', () => {
+  it("col", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    const instance = db.select('user').col('nickname');
+    const instance = db.select("user").col("nickname");
     expect(instance.mode).toBe(3);
-    expect(instance.columnName).toBe('nickname');
+    expect(instance.columnName).toBe("nickname");
   });
 
-  it('count', () => {
+  it("count", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    const instance = db.select('user').count();
+    const instance = db.select("user").count();
     expect(instance.mode).toBe(4);
   });
 
-  it('select: order', () => {
+  it("select: order", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    db.select('user').order('nickname').run();
-    expect(db.execute).toHaveBeenCalledWith('SELECT * FROM user ORDER BY nickname;', []);
+    db.select("user").order("nickname").run();
+    expect(db.execute).toHaveBeenCalledWith(
+      "SELECT * FROM user ORDER BY nickname;",
+      [],
+    );
   });
 
-  it('update: fields, setValues, where', () => {
+  it("update: fields, setValues, where", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    db.update('user')
-      .fields(['nickname'])
-      .setValues(['myNewNickname'])
+    db.update("user")
+      .fields(["nickname"])
+      .setValues(["myNewNickname"])
       .where({ id: 2 })
       .run();
-    expect(db.execute).toHaveBeenCalledWith('UPDATE user SET nickname = ? WHERE id = ?;', ['myNewNickname', 2]);
+    expect(db.execute).toHaveBeenCalledWith(
+      "UPDATE user SET nickname = ? WHERE id = ?;",
+      ["myNewNickname", 2],
+    );
   });
 
-  it('delete: where', () => {
+  it("delete: where", () => {
     const db = open({}, console);
     db.execute = jest.fn();
-    db.delete('user').where({ id: 1 }).run();
-    expect(db.execute).toHaveBeenCalledWith('DELETE FROM user WHERE id = ?;', [1]);
+    db.delete("user").where({ id: 1 }).run();
+    expect(db.execute).toHaveBeenCalledWith("DELETE FROM user WHERE id = ?;", [
+      1,
+    ]);
   });
 
-  it('add: fields, setValues, commit', () => {
+  it("add: fields, setValues, commit", () => {
     const db = open({}, console);
     db.safeExecute = jest.fn();
-    db.add('user')
-      .fields(['nickname', 'password'])
-      .setValues(['rico14', 'qwerty321@'])
+    db.add("user")
+      .fields(["nickname", "password"])
+      .setValues(["rico14", "qwerty321@"])
       .commit()
       .run();
-    expect(db.safeExecute).toHaveBeenCalledWith('INSERT INTO user(nickname, password) VALUES(?, ?);', ['rico14', 'qwerty321@']);
+    expect(db.safeExecute).toHaveBeenCalledWith(
+      "INSERT INTO user(nickname, password) VALUES(?, ?);",
+      ["rico14", "qwerty321@"],
+    );
   });
 
   afterEach(() => {

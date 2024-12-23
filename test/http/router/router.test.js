@@ -1,31 +1,31 @@
-import { describe, expect, test } from '@jest/globals';
-import Router from '../../../lib/http/router/router.js';
-import SubRouter from '../../../lib/http/router/sub-router.js';
+import { describe, expect, test } from "@jest/globals";
+import Router from "../../../lib/http/router/router.js";
+import SubRouter from "../../../lib/http/router/sub-router.js";
 
-describe('Module Router', () => {
+describe("Module Router", () => {
   const rootSubRouter = new SubRouter();
-  rootSubRouter.get('/', async (client) => {
+  rootSubRouter.get("/", async (client) => {
     const { res } = client;
     res.statusCode = 200;
   });
 
   const chatSubRouter = new SubRouter();
-  chatSubRouter.get('/', async (client) => {
+  chatSubRouter.get("/", async (client) => {
     const { res } = client;
     res.statusCode = 200;
   });
 
-  const chatRouter = new Router(new Map([
-    ['/', chatSubRouter],
-  ]));
+  const chatRouter = new Router(new Map([["/", chatSubRouter]]));
 
-  const router = new Router(new Map([
-    ['/', rootSubRouter],
-    ['/chat', chatRouter],
-  ]));
+  const router = new Router(
+    new Map([
+      ["/", rootSubRouter],
+      ["/chat", chatRouter],
+    ]),
+  );
 
-  test('get handler directly', async () => {
-    const req = { method: 'GET', url: '/' };
+  test("get handler directly", async () => {
+    const req = { method: "GET", url: "/" };
     const res = {};
 
     const handler = router.getHandler(req);
@@ -34,8 +34,8 @@ describe('Module Router', () => {
     expect(res.statusCode).toBe(200);
   });
 
-  test('get handler indirectly', async () => {
-    const req = { method: 'GET', url: '/chat' };
+  test("get handler indirectly", async () => {
+    const req = { method: "GET", url: "/chat" };
     const res = {};
 
     const handler = router.getHandler(req);
@@ -44,8 +44,8 @@ describe('Module Router', () => {
     expect(res.statusCode).toBe(200);
   });
 
-  test('no handler', () => {
-    const req = { method: 'GET', url: '/chat.html' };
+  test("no handler", () => {
+    const req = { method: "GET", url: "/chat.html" };
 
     const handler = router.getHandler(req);
 

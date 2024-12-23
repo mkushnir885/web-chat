@@ -1,26 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <title>Web Chat</title>
-  <meta charset="utf-8"/>
-</head>
-<body>
-  <h1>Account Management</h1>
-  <button id="go-to-chat">Chat</button>
-  <form id="form-account" action="/account/update" method="post">
-    <label for="change-nick">Change your nickname:</label>
-    <br/>
-    <input id="change-nick" name="nickname" type="text">
-    <br/>
-    <label for="change-pass">Change your password:</label>
-    <br/>
-    <input id="change-pass" name="password" type="text">
-    <br/>
-    <input value="Submit" type="submit">
-  </form>
-  <br/>
-  <button id="btn-logout">Log out</button>
-  <button id="btn-delete">Delete account</button>
-  <script src="./scripts/account.js"></script>
-</body>
+  <head>
+    <title>Web Chat</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>Account Management</h1>
+    <button id="go-to-chat">Chat</button>
+    <form id="form-account" action="/account/update" method="post">
+      <label for="change-nick">Change your nickname:</label>
+      <br />
+      <input id="change-nick" name="nickname" type="text" />
+      <br />
+      <label for="change-pass">Change your password:</label>
+      <br />
+      <input id="change-pass" name="password" type="text" />
+      <br />
+      <input value="Submit" type="submit" />
+    </form>
+    <br />
+    <button id="btn-logout">Log out</button>
+    <button id="btn-delete">Delete account</button>
+    <script src="./scripts/account.js"></script>
+  </body>
 </html>

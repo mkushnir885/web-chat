@@ -8,7 +8,7 @@ const submitForm = async (event) => {
     const res = await fetch(form.action, {
       method: form.method,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams(formData).toString(),
     });
@@ -22,27 +22,29 @@ const submitForm = async (event) => {
   }
 };
 
-window.addEventListener('load', () => {
-  document.getElementById('form-account').addEventListener('submit', submitForm);
+window.addEventListener("load", () => {
+  document
+    .getElementById("form-account")
+    .addEventListener("submit", submitForm);
 
-  const logoutBtn = document.getElementById('btn-logout');
-  logoutBtn.addEventListener('click', async () => {
+  const logoutBtn = document.getElementById("btn-logout");
+  logoutBtn.addEventListener("click", async () => {
     try {
-      const res = await fetch('/logout', { method: 'DELETE' });
+      const res = await fetch("/logout", { method: "DELETE" });
       const resBody = await res.json();
-      if (res.status === 200) window.location.href = '/';
+      if (res.status === 200) window.location.href = "/";
       else alert(resBody.errorMessage);
     } catch (err) {
       alert(err.message);
     }
   });
 
-  const deleteBtn = document.getElementById('btn-delete');
-  deleteBtn.addEventListener('click', async () => {
+  const deleteBtn = document.getElementById("btn-delete");
+  deleteBtn.addEventListener("click", async () => {
     try {
-      const res = await fetch('/account', { method: 'DELETE' });
+      const res = await fetch("/account", { method: "DELETE" });
       const resBody = await res.json();
-      if (res.status === 200) window.location.href = '/';
+      if (res.status === 200) window.location.href = "/";
       else alert(resBody.errorMessage);
     } catch (err) {
       alert(err.message);
@@ -50,7 +52,7 @@ window.addEventListener('load', () => {
   });
 });
 
-const btnChat = document.getElementById('go-to-chat');
-btnChat.addEventListener('click', () => {
-  window.location.href = '/chat';
+const btnChat = document.getElementById("go-to-chat");
+btnChat.addEventListener("click", () => {
+  window.location.href = "/chat";
 });
