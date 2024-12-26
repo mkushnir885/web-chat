@@ -17,9 +17,9 @@
     "dev:ws": "node --watch lib/ws/main.js",
     "jest":  "node --experimental-vm-modules node_modules/jest/bin/jest.js --passWithNoTests",
     "test:unit": "npm run jest ./test/unit",
-    "test:integration": "npm run jest ./test/integration",
+    "test:integration": "./test/integration/test.sh",
     "test:e2e": "npm run jest ./test/e2e",
-    "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
+    "test": "npm run test:unit",
     "lint": "eslint .",
     "fmt": "prettier --write ."
   },
