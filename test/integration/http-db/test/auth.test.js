@@ -30,6 +30,8 @@ const closeDbConn = async () => {
 };
 
 describe("User authentication", () => {
+  console.log(ADDR, env.DB_HOST);
+
   beforeAll(() => openDbConn());
   afterAll(() => closeDbConn());
 

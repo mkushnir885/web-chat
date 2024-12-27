@@ -1,11 +1,10 @@
-test/
 .idea/
 .github/
+.husky/
 node_modules/
 
-*Dockerfile
+docker/
 .dockerignore
-docker-compose.yml
 
 .editorconfig
 
@@ -15,3 +14,4 @@ docker-compose.yml
 .eslintignore
 
 README*
+LICENSE
