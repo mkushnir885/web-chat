@@ -114,7 +114,7 @@ describe("User authentication", () => {
 
     const options = { method: "GET", headers: { Cookie: cookies } };
 
-    const { statusCode } = await sendRequest(`${ADDR}/chat`, options);
+    const { statusCode } = await sendRequest(`${ADDR}/chat/server`, options);
 
     expect(statusCode).toBe(200);
   });
@@ -147,9 +147,9 @@ describe("User authentication", () => {
     {
       const options = { method: "GET", headers: { Cookie: cookies } };
 
-      const { statusCode } = await sendRequest(`${ADDR}/chat`, options);
+      const { statusCode } = await sendRequest(`${ADDR}/chat/server`, options);
 
-      expect(statusCode).toBe(404);
+      expect(statusCode).toBe(403);
     }
   });
 });
