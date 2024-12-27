@@ -2,11 +2,9 @@ FROM alpine
 
 RUN apk add --no-cache nodejs npm
 
-WORKDIR /app
+WORKDIR /dir
 
 COPY package*.json .
-RUN npm clean-install --omit=dev
+RUN npm clean-install
 
 COPY . .
-
-ENTRYPOINT ["npm", "run"]

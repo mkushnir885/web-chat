@@ -1,0 +1,21 @@
+networks:
+  web-chat-net:
+
+include:
+  - ../../../docker/docker-compose.db.yml
+  - ../../../docker/docker-compose.http.yml
+
+services:
+  test:
+    build:
+      context: ../../..
+      dockerfile: docker/Dockerfile
+    depends_on:
+      http:
+        condition: service_healthy
+    networks:
+      - web-chat-net
+    environment:
+      - HTTP_HOST=web-chat-http
+      - HTTP_PORT=8080
+    env_file: ../../../docker/.env.db

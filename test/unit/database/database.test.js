@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
-import open from "../../lib/database/database.js";
+import open from "../../../lib/database/database.js";
 
 describe("Database", () => {
   it("select: where", () => {

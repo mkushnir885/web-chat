@@ -12,10 +12,16 @@
   "type": "module",
   "scripts": {
     "http": "node lib/http/main.js",
+    "http:health": "node lib/http/health.js",
     "ws": "node lib/ws/main.js",
+    "ws:health": "node lib/ws/health.js",
     "dev:http": "node --watch lib/http/main.js",
     "dev:ws": "node --watch lib/ws/main.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "jest":  "node --experimental-vm-modules node_modules/jest/bin/jest.js --passWithNoTests",
+    "test:unit": "npm run jest ./test/unit",
+    "test:integration": "./test/integration/run.sh",
+    "test:e2e": "npm run jest ./test/e2e",
+    "test": "npm run test:unit",
     "lint": "eslint .",
     "fmt": "prettier --write ."
   },
