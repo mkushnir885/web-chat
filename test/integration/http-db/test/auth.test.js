@@ -1,39 +1,17 @@
-import "dotenv/config";
-
 import { afterAll, beforeAll, describe, expect, it } from "@jest/globals";
 import * as queryString from "node:querystring";
-import initDb from "../../../../lib/database/database.js";
 import sendRequest from "./utils/send-request.js";
-import Logger from "../../../../lib/logger/logger.js";
+import { openDbConn, closeDbConn } from "./utils/db-connection.js";
 
-const { env } = process;
-
-const ADDR = `http://${env.HTTP_HOST}:${env.HTTP_PORT}`;
+const ADDR = `http://${process.env.HTTP_HOST}:${process.env.HTTP_PORT}`;
 
 let db;
 
-const openDbConn = () => {
-  const logger = new Logger({ useConsole: true });
-  db = initDb(
-    {
-      host: env.DB_HOST,
-      user: env.DB_USER,
-      database: env.DB_NAME,
-      password: env.DB_PASS,
-    },
-    logger,
-  );
-};
-
-const closeDbConn = async () => {
-  await db.close();
-};
-
 describe("User authentication", () => {
-  console.log(ADDR, env.DB_HOST);
-
-  beforeAll(() => openDbConn());
-  afterAll(() => closeDbConn());
+  beforeAll(() => {
+    db = openDbConn();
+  });
+  afterAll(() => closeDbConn(db));
 
   it("should sign up because no such user", async () => {
     const userData = { nickname: "Bob", password: "12345" };
