@@ -1,23 +1,103 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 70vh;
+  gap: 10px;
+}
+
+.chat {
+  display: flex;
+  flex: 3;
+  flex-direction: column;
+}
+
 .chat-messages {
-  width: 50%;
-  height: 500px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 40;
   margin: 10px 0 10px;
-  border: 2px solid black;
+  border: 3px solid black;
+  border-radius: 10px;
+  overflow-y: scroll;
+  padding: 10px;
+  gap: 10px;
+}
+
+.no-room-msg {
+  position: absolute;
+  left: 33%;
+  top: 45%;
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  z-index: 10;
+}
+
+.msg-sending {
+  visibility: hidden;
+  display: flex;
+  flex: 1;
+  gap: 7px;
+}
+
+.own-message,
+.other-message {
+  display: flex;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+  flex-direction: column;
+  gap: 0;
+}
+
+.own-message {
+  align-self: flex-end;
+  background-color: rgb(205, 255, 238);
+}
+
+.other-message {
+  align-self: flex-start;
+  background-color: rgb(241, 241, 241);
+}
+
+.msg-time,
+.msg-author {
+  font-size: 10px;
+  color: rgb(171, 171, 171);
+  margin: 0;
+}
+
+.own-message .msg-time,
+.own-message .msg-author {
+  align-self: flex-end;
+}
+
+.other-message .msg-time,
+.other-message .msg-author {
+  align-self: flex-start;
+}
+
+.chats-history {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.chat-rooms {
+  display: flex;
+  flex-direction: column;
+  flex: 40;
+  margin: 10px 0 10px;
+  border: 3px solid black;
+  border-radius: 10px;
   overflow-y: scroll;
 }
 
-.chat-message {
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  padding: 5px 10px 5px;
-}
-
-.msg-author {
-  color: red;
-  font-weight: bold;
-}
-
-.msg-time {
-  color: blue;
-  font-style: italic;
+.room {
+  margin: 7px;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
 }

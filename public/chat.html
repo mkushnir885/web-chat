@@ -8,17 +8,28 @@
   <body>
     <h1>Web Chat</h1>
     <button id="go-to-acc">Account</button>
-    <div class="chat-messages"></div>
-    <label>
-      <input
-        id="write-msg"
-        type="text"
-        placeholder="Write a message"
-        required
-        autocomplete="off"
-      />
-    </label>
-    <button id="send-msg">Send</button>
+    <div class="container">
+      <div class="chat">
+        <div class="chat-messages"></div>
+        <div class="no-room-msg">Choose a room first</div>
+        <div class="msg-sending">
+          <label>
+            <input
+              id="write-msg"
+              type="text"
+              placeholder="Write a message"
+              required
+              autocomplete="off"
+            />
+          </label>
+          <button id="send-msg">Send</button>
+        </div>
+      </div>
+      <div class="chats-history">
+        <div class="chat-rooms"></div>
+        <button id="btn-new-room">New room</button>
+      </div>
+    </div>
     <script type="module" src="./scripts/chat.js"></script>
   </body>
 </html>
