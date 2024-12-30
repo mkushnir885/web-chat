@@ -11,6 +11,8 @@ const btnSend = document.getElementById("send-msg");
 const input = document.getElementById("write-msg");
 const bntAccount = document.getElementById("go-to-acc");
 const btnNewRoom = document.getElementById("btn-new-room");
+const searchInput = document.getElementById("search-input");
+const searchButton = document.getElementById("search-btn");
 
 const createMessageElement = ({ author, timestamp, body }, isOwnMessage) => {
   const msgContainer = document.createElement("div");
@@ -141,4 +143,24 @@ fetch("/chat/server")
           console.error(error);
         });
     });
+
+    // searchButton.addEventListener("click", () => {
+    //   const roomName = searchInput.value;
+    //   fetch(`/chat/search?chatName=${roomName}`, {
+    //     method: "GET",
+    //   })
+    //     .then((response) => {
+    //       if (!response.ok) {
+    //         throw new Error(`HTTP error! Status: ${response.status}`);
+    //       }
+    //       return response.json();
+    //     })
+    //     .then((data) => {
+    //       ws.send(JSON.stringify({ event: "CHAT_JOINING", user }));
+    //       console.log(data.message);
+    //     })
+    //     .catch((error) => {
+    //       console.error(error);
+    //     });
+    // });
   });

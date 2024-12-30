@@ -94,10 +94,29 @@
   overflow-y: scroll;
 }
 
-.room {
+.room, #search-input {
   margin: 7px;
   padding: 10px;
   border: 1px solid black;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.search-room {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 3px solid black;;
+}
+
+.search-btn {
+  display: flex;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+  height: 70%;
+  justify-content: center;
+  align-items: center;
+  flex: 0.3;
 }
