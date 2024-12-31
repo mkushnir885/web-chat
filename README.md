@@ -1,52 +1,106 @@
-# Web-chat
+# OpenChat
 
-This project implements the basic functionality of web chat, which allows users to log in and exchange messages in real time. One of the key features is the minimization of external dependencies to ensure full control over the code base. The project has been developed taking into account the principles of extensibility and modularity, which allows you to easily add new functions or change existing ones.
+## 📖 Overview
 
-The project uses Docker-Compose to provide easy deployment and management of the development environment, which adds convenience and improves opportunities for further development.
+OpenChat is a lightweight and dependency-minimized web application designed to provide a real-time communication platform. The primary objective during development was to reduce reliance on external libraries and frameworks, achieving a streamlined and efficient architecture. The application incorporates an HTTP server, a WebSocket server, and a database to deliver a full-featured chat system.
 
-## How to run
+### ✨ Key Features
 
-First of all, you should start the MySQL server. You can find the SQL script for database initialization in the `lib/database/sql/` directory.
+1. 🔐 **User Authentication:**
+   - Supports user registration (Sign up) and login (Log in).
+   - User credentials are stored in the database.
 
-Then, in the root directory of the project, create a `.env` file and specify the following environment variables:
+2. 🏠 **Chat Rooms:**
+   - Users can create custom chat rooms by specifying a room name.
+   - Users can browse existing chat rooms and join them.
+   - Each user maintains a list of rooms they are a member of, enabling quick access to ongoing conversations.
 
-```bash
-# HTTP server configuration
-HTTP_HOST=... # Hostname of HTTP server (default: "localhost")
-HTTP_PORT=... # Port of HTTP server (default: 8000)
+3. ⚡ **Real-Time Messaging:**
+   - Messages within a room are exchanged in real-time using WebSocket communication.
+   - Message history is maintained for each room.
 
-# WebSocket server configuration
-WS_HOST=... # Hostname of WebSocket server (default: "localhost")
-WS_PORT=... # Port of WebSocket server (default: 8001)
+4. 👤 **Profile Management:**
+   - Users can update their nickname and password.
+   - Options to log out or delete the account are available.
 
-# Database configuration
-DB_NAME=... # Name of MySQL database (default: "web_chat")
-DB_HOST=... # Hostname of MySQL server (default: "localhost")
-DB_USER=... # Username to access database (default: "root")
-DB_PASS=... # Password for the MySQL user (default: "")
-```
+5. 📦 **Dependency-Minimized Architecture:**
+   - HTTP server handles static assets, authentication, and room management.
+   - WebSocket server facilitates real-time message exchange.
+   - Database stores user credentials, chat rooms, membership data, and message history.
 
-To start the HTTP and WebSocket servers, use the following npm scripts:
+## 🔄 Application Workflow
 
-```bash
-npm run http
-```
+### 1. 🆕 **User Registration and Login**
 
-```bash
-npm run ws
-```
+- **Sign Up:** A new user fills out a registration form with essential details (e.g., username, password).
+- **Log In:** Existing users provide their credentials to access their account.
 
-### Docker Compose
+Upon successful authentication, the user is redirected to the main chat interface.
 
-Alternatively, you can run application using Docker Compose. Run the following command in the root of the project:
+### 2. 🏠 **Chat Room Management**
 
-```bash
-docker compose up
-```
+- Users can:
+  - **Create a Room:** Provide a name to establish a new chat room.
+  - **Join a Room:** Browse and join available rooms created by other users.
+- Membership in rooms is persistent, allowing users to rejoin rooms they’ve participated in during previous sessions.
 
-This command will create three interconnected containers for the MySQL, HTTP, and WebSocket servers. The application will be available at http://localhost:8080.
+### 3. ✉️ **Messaging**
 
-## Contributors
+- Users within a chat room can:
+  - Send messages.
+  - Receive messages in real-time from other members.
+- Message history is displayed when entering a room, enabling context for ongoing discussions.
 
-- [Mykola Kushnir](https://github.com/mkushnir885)
-- [Maksym Yatsenko](https://github.com/yatsenkoM)
+### 4. 🛠️ **Profile Management**
+
+- Accessible via a dedicated settings button on the main chat interface.
+- Users can:
+  - Change their nickname.
+  - Update their password.
+  - Log out from their account.
+  - Delete their account, removing all associated data.
+
+## 🏗️ Technical Architecture
+
+### 1. 🌐 **HTTP Server**
+
+- Serves static assets (HTML, CSS, JavaScript).
+- Handles user authentication (Sign up, Log in, and profile management).
+- Manages API endpoints for room creation, joining, and membership.
+
+### 2. 🔄 **WebSocket Server**
+
+- Manages real-time message exchange between users.
+- Ensures low-latency communication within chat rooms.
+
+### 3. 🗄️ **Database**
+
+- Stores user data:
+  - Credentials (username, password).
+  - Profile settings (nickname).
+- Maintains chat room details:
+  - Room names.
+  - Membership information.
+- Preserves message history for each room.
+
+## 💻 Technologies Used
+
+### Core Technologies:
+
+- 🚀 **Node.js:** A scalable and efficient runtime for server-side operations.
+- 💾 **MySQL:** A relational database management system for structured and persistent data storage.
+- 📡 **WebSockets:** A communication protocol enabling real-time, bidirectional messaging.
+
+### Libraries and Tools:
+
+- 🔒 **dotenv:** Facilitates secure management of environment variables.
+- 📂 **mysql2:** Simplifies interaction with the MySQL database, providing asynchronous queries.
+- ⚡ **ws:** Implements WebSocket-based real-time communication.
+
+### Development and Quality Assurance:
+
+- ⚙️ **Babel:** Enables compatibility by transpiling modern JavaScript and TypeScript.
+- ✅ **Jest:** A robust testing framework ensuring application reliability.
+- 📏 **ESLint:** Maintains high code quality through linting.
+- 🎨 **Prettier:** Automatically formats code for readability and consistency.
+- 🐶 **Husky:** Integrates Git hooks for automated pre-commit checks.
