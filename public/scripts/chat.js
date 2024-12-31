@@ -16,8 +16,8 @@ const elements = {
   searchPanel: document.querySelector(".search-room"),
   searchInput: document.getElementById("search-input"),
   searchButton: document.getElementById("search-btn"),
-  modal: document.getElementById('get-group-name'),
-  createGroupBtn: document.getElementById('createGroupBtn'),
+  modal: document.getElementById("get-group-name"),
+  createGroupBtn: document.getElementById("createGroupBtn"),
 };
 
 const createMessageElement = ({ author, timestamp, body }, isOwnMessage) => {
@@ -37,7 +37,46 @@ const createMessageElement = ({ author, timestamp, body }, isOwnMessage) => {
   elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
 };
 
-const outputMessage = (message, isOwnMessage) => createMessageElement(message, isOwnMessage);
+const outputMessage = (message, isOwnMessage) =>
+  createMessageElement(message, isOwnMessage);
+
+const getGroupName = () =>
+  new Promise((resolve, reject) => {
+    elements.modal.style.display = "flex";
+    window.onclick = (event) => {
+      if (event.target === elements.modal) {
+        elements.modal.style.display = "none";
+        reject(new Error("Window is closed"));
+      }
+    };
+    elements.createGroupBtn.addEventListener("click", () => {
+      const groupName = document.getElementById("groupName").value;
+      if (groupName) {
+        elements.modal.style.display = "none";
+        resolve(groupName);
+      }
+    });
+  });
+
+const handleFindPressed = () => {
+  elements.searchPanel.style.setProperty("display", "none");
+  const backBtn = document.createElement("button");
+  backBtn.className = "back-btn";
+  backBtn.textContent = "< Back";
+  elements.chatsHistory.prepend(backBtn);
+  backBtn.addEventListener("click", () => {
+    elements.searchPanel.style.setProperty("display", "flex");
+    backBtn.remove();
+    const notInRoom = document.querySelector(".not-in-room");
+    if (notInRoom) notInRoom.remove();
+    const reminder = document.querySelector(".in-room p");
+    if (reminder) reminder.remove();
+    const inRooms = document.querySelectorAll(".in-room");
+    inRooms.forEach((room) => {
+      room.style.setProperty("display", "flex");
+    });
+  });
+};
 
 (async () => {
   try {
@@ -53,6 +92,19 @@ const outputMessage = (message, isOwnMessage) => createMessageElement(message, i
       ws.send(JSON.stringify({ event: "USER_ONLINE", user }));
     });
 
+    const showMessagesFromRoom = (room) => {
+      if (!currentChatId) {
+        elements.msgToChooseRoom.style.setProperty("display", "none");
+        elements.msgSending.style.setProperty("visibility", "visible");
+      }
+      currentChatId = parseInt(room.id, 10);
+      elements.chatMessages.innerHTML = "";
+      const { messages } = chats[room.id];
+      messages.forEach((message) =>
+        outputMessage(message, message.author === user.name),
+      );
+    };
+
     eventEmitter.onEvent("CHATS_HISTORY", (data) => {
       const { rooms } = data;
       chats = rooms;
@@ -63,7 +115,9 @@ const outputMessage = (message, isOwnMessage) => createMessageElement(message, i
         chatCell.textContent = chat.chatName;
         chatCell.classList.add("room", "in-room");
         elements.chatRooms.appendChild(chatCell);
-        chatCell.addEventListener("click", () => showMessagesFromRoom(chatCell));
+        chatCell.addEventListener("click", () =>
+          showMessagesFromRoom(chatCell),
+        );
       });
     });
 
@@ -71,7 +125,9 @@ const outputMessage = (message, isOwnMessage) => createMessageElement(message, i
       const { history } = data;
       const { chatId, messages } = history;
       chats[chatId].messages = messages;
-      messages.forEach((message) => outputMessage(message, message.author === user.name));
+      messages.forEach((message) =>
+        outputMessage(message, message.author === user.name),
+      );
     });
 
     eventEmitter.onEvent("CHAT_MESSAGE", (data) => {
@@ -101,7 +157,7 @@ const outputMessage = (message, isOwnMessage) => createMessageElement(message, i
           JSON.stringify({
             event: "NEW_MESSAGE",
             message: { body, chatId: currentChatId },
-          })
+          }),
         );
         elements.msgInput.value = "";
       }
@@ -112,23 +168,12 @@ const outputMessage = (message, isOwnMessage) => createMessageElement(message, i
       window.location.href = "/account";
     });
 
-    const showMessagesFromRoom = (room) => {
-      if (!currentChatId) {
-        elements.msgToChooseRoom.style.setProperty("display", "none");
-        elements.msgSending.style.setProperty("visibility", "visible");
-      }
-      currentChatId = parseInt(room.id, 10);
-      elements.chatMessages.innerHTML = "";
-      const { messages } = chats[room.id];
-      messages.forEach((message) => outputMessage(message, message.author === user.name));
-    };
-
     elements.btnNewRoom.addEventListener("click", async () => {
       try {
         const newRoomName = await getGroupName();
         const newRoom = document.createElement("div");
         newRoom.textContent = newRoomName;
-        newRoom.classList.add('room', 'in-room');
+        newRoom.classList.add("room", "in-room");
         elements.chatRooms.appendChild(newRoom);
         newRoom.addEventListener("click", () => showMessagesFromRoom(newRoom));
         const response = await fetch(`/chat/create?chatName=${newRoomName}`, {
@@ -141,17 +186,53 @@ const outputMessage = (message, isOwnMessage) => createMessageElement(message, i
         newRoom.id = data.chatId;
         chats[newRoom.id] = {};
         chats[newRoom.id].messages = [];
-        ws.send(JSON.stringify({ event: "NEW_CHAT", chat: { chatId: data.chatId } }));
+        ws.send(
+          JSON.stringify({ event: "NEW_CHAT", chat: { chatId: data.chatId } }),
+        );
         console.log(data.message);
       } catch (error) {
         console.error(error);
       }
     });
 
-    elements.searchButton.addEventListener("click", async () => {
-      const roomName = elements.searchInput.value;
-      await startRoomSearch(roomName);
-    });
+    const fetchChatJoining = async (roomEl, roomId) => {
+      try {
+        const response = await fetch(`/chat/join?chatId=${roomId}`, {
+          method: "POST",
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        chats[roomEl.id] = { messages: [] };
+        currentChatId = parseInt(roomId, 10);
+        ws.send(
+          JSON.stringify({ event: "CHAT_JOINING", chat: { chatId: roomId } }),
+        );
+        console.log(data.message);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const handleRoomJoining = (roomName, roomId) => {
+      const room = document.createElement("div");
+      room.textContent = roomName;
+      room.classList.add("room", "in-room");
+      elements.chatRooms.appendChild(room);
+      const availableRooms = document.querySelectorAll(".in-room");
+      availableRooms.forEach((chat) => {
+        chat.style.setProperty("display", "flex");
+      });
+      if (!currentChatId) {
+        elements.msgToChooseRoom.style.setProperty("display", "none");
+        elements.msgSending.style.setProperty("visibility", "visible");
+      }
+      room.id = roomId;
+      fetchChatJoining(room, roomId);
+      room.addEventListener("click", () => showMessagesFromRoom(room));
+      elements.chatMessages.innerHTML = "";
+    };
 
     const startRoomSearch = async (roomName) => {
       try {
@@ -159,25 +240,25 @@ const outputMessage = (message, isOwnMessage) => createMessageElement(message, i
           method: "GET",
         });
         if (!response.ok) {
-          alert('There is no room with this name');
+          alert("There is no room with this name");
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
         handleFindPressed();
-        const availableRooms = document.querySelectorAll('.in-room');
-        availableRooms.forEach(room => {
-          room.style.setProperty('display', 'none');
+        const availableRooms = document.querySelectorAll(".in-room");
+        availableRooms.forEach((room) => {
+          room.style.setProperty("display", "none");
         });
-        const reminder = document.createElement('p');
+        const reminder = document.createElement("p");
         if (data.chatId in chats) {
           const room = document.getElementById(data.chatId);
-          room.style.setProperty('display', 'flex');
+          room.style.setProperty("display", "flex");
           reminder.textContent = "You're already in";
           room.appendChild(reminder);
         } else {
-          let room = document.createElement("div");
+          const room = document.createElement("div");
           room.textContent = roomName;
-          room.classList.add('room', 'not-in-room');
+          room.classList.add("room", "not-in-room");
           reminder.textContent = "You can join";
           room.appendChild(reminder);
           elements.chatRooms.appendChild(room);
@@ -192,82 +273,11 @@ const outputMessage = (message, isOwnMessage) => createMessageElement(message, i
       }
     };
 
-    const handleRoomJoining = (roomName, roomId) => {
-      const room = document.createElement("div");
-      room.textContent = roomName;
-      room.classList.add('room', 'in-room');
-      elements.chatRooms.appendChild(room);
-      const availableRooms = document.querySelectorAll('.in-room');
-      availableRooms.forEach(room => {
-        room.style.setProperty('display', 'flex');
-      });
-      if (!currentChatId) {
-        elements.msgToChooseRoom.style.setProperty("display", "none");
-        elements.msgSending.style.setProperty("visibility", "visible");
-      }
-      fetchChatJoining(room, roomId);
-      room.addEventListener("click", () => showMessagesFromRoom(room));
-      elements.chatMessages.innerHTML = "";
-    };
-
-    const fetchChatJoining = async (roomEl, roomId) => {
-      try {
-        const response = await fetch(`/chat/join?chatId=${roomId}`, {
-          method: "POST",
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const res = await response.json();
-        roomEl.id = roomId;
-        chats[roomEl.id] = { messages: [] };
-        currentChatId = parseInt(roomId, 10);
-        ws.send(JSON.stringify({ event: "CHAT_JOINING", chat: { chatId: roomId } }));
-        console.log(res.message);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    elements.searchButton.addEventListener("click", async () => {
+      const roomName = elements.searchInput.value;
+      await startRoomSearch(roomName);
+    });
   } catch (error) {
     console.error(error);
   }
 })();
-
-const handleFindPressed = () => {
-  elements.searchPanel.style.setProperty("display", "none");
-  const backBtn = document.createElement("button");
-  backBtn.className = "back-btn";
-  backBtn.textContent = "< Back";
-  elements.chatsHistory.prepend(backBtn);
-  backBtn.addEventListener("click", () => {
-    elements.searchPanel.style.setProperty("display", "flex");
-    backBtn.remove();
-    const notInRoom = document.querySelector('.not-in-room');
-    if (notInRoom) notInRoom.remove();
-    const reminder = document.querySelector('.in-room p');
-    if (reminder) reminder.remove();
-    const inRooms = document.querySelectorAll('.in-room');
-    inRooms.forEach(room => {
-      room.style.setProperty('display', 'flex');
-    });
-  });
-};
-
-const getGroupName = () => {
-  return new Promise((resolve, reject) => {
-    elements.modal.style.display = 'flex';
-    window.onclick = (event) => {
-      if (event.target == elements.modal) {
-        elements.modal.style.display = 'none';
-        reject('Window is closed');
-      }
-    };
-    elements.createGroupBtn.addEventListener("click", () => {
-      const groupName = document.getElementById('groupName').value;
-      if (groupName) {
-        elements.modal.style.display = 'none';
-        resolve(groupName);
-      }
-    });
-  });
-};
