@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Web Chat</title>
+    <title>OpenChat</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="./styles/chat.css" />
   </head>
   <body>
-    <h1>Web Chat</h1>
-    <button id="go-to-acc">Account</button>
+    <h1>OpenChat</h1>
     <div class="container">
       <div class="chat">
-        <div class="chat-messages"></div>
-        <div class="no-room-msg">Choose a room first</div>
+        <div class="chat-messages">
+          <div class="no-room-msg">Choose a room first</div>
+        </div>
         <div class="msg-sending">
           <label>
             <input
@@ -26,22 +26,43 @@
         </div>
       </div>
       <div class="chats-history">
-        <div class="chat-rooms">
-          <div class="search-room">
-            <label>
-              <input
-                id="search-input"
-                type="text"
-                placeholder="Write a room name"
-                required
-                autocomplete="off"
-              />
-            </label>
-            <button class="search-btn">Find</button>
-          </div>
+        <div class="search-room">
+          <label>
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Write a room name"
+              required
+              autocomplete="off"
+            />
+          </label>
+          <button id="search-btn">Find</button>
         </div>
+        <div class="chat-rooms"></div>
         <button id="btn-new-room">New room</button>
       </div>
+    </div>
+    <div id="get-group-name" class="modal">
+      <div class="modal-content">
+          <h2>Enter a group name</h2>
+          <input type="text" id="groupName" placeholder="Name of group">
+          <button id="createGroupBtn">Create</button>
+      </div>
+    </div>
+    <div class="bottom">
+      <button id="go-to-acc">Account</button>
+    </div>
+    <div class="snowfall">
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
     </div>
     <script type="module" src="./scripts/chat.js"></script>
   </body>

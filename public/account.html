@@ -3,24 +3,35 @@
   <head>
     <title>Web Chat</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="./styles/account.css" />
   </head>
   <body>
+    <button id="go-to-chat">Back to chat</button>
     <h1>Account Management</h1>
-    <button id="go-to-chat">Chat</button>
-    <form id="form-account" action="/account/update" method="post">
-      <label for="change-nick">Change your nickname:</label>
+    <div class="options">
+      <form id="form-account" action="/account/update" method="post">
+        <input id="change-nick" name="nickname" type="text" placeholder="Change your nickname" />
+        <input id="change-pass" name="password" type="text" placeholder="Change your password" />
+        <input value="Save" type="submit" />
+      </form>
       <br />
-      <input id="change-nick" name="nickname" type="text" />
-      <br />
-      <label for="change-pass">Change your password:</label>
-      <br />
-      <input id="change-pass" name="password" type="text" />
-      <br />
-      <input value="Submit" type="submit" />
-    </form>
-    <br />
-    <button id="btn-logout">Log out</button>
-    <button id="btn-delete">Delete account</button>
+      <button id="btn-logout">Log out</button>
+      <button id="btn-delete">Delete account</button>
+    </div>
+    
+    <div class="snowfall">
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+      <div class="snowflake"></div>
+    </div>
+
     <script src="./scripts/account.js"></script>
   </body>
 </html>

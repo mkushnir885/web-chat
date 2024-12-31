@@ -3,16 +3,22 @@ import formatDateFromTimestamp from "./modules/format-date.js";
 
 const eventEmitter = new EventEmitter();
 
-const chatMessages = document.querySelector(".chat-messages");
-const msgSending = document.querySelector(".msg-sending");
-const chatRooms = document.querySelector(".chat-rooms");
-const msgToChooseRoom = document.querySelector(".no-room-msg");
-const btnSend = document.getElementById("send-msg");
-const input = document.getElementById("write-msg");
-const bntAccount = document.getElementById("go-to-acc");
-const btnNewRoom = document.getElementById("btn-new-room");
-const searchInput = document.getElementById("search-input");
-const searchButton = document.getElementById("search-btn");
+const elements = {
+  chatMessages: document.querySelector(".chat-messages"),
+  msgSending: document.querySelector(".msg-sending"),
+  chatsHistory: document.querySelector(".chats-history"),
+  chatRooms: document.querySelector(".chat-rooms"),
+  msgToChooseRoom: document.querySelector(".no-room-msg"),
+  btnSend: document.getElementById("send-msg"),
+  msgInput: document.getElementById("write-msg"),
+  bntAccount: document.getElementById("go-to-acc"),
+  btnNewRoom: document.getElementById("btn-new-room"),
+  searchPanel: document.querySelector(".search-room"),
+  searchInput: document.getElementById("search-input"),
+  searchButton: document.getElementById("search-btn"),
+  modal: document.getElementById('get-group-name'),
+  createGroupBtn: document.getElementById('createGroupBtn'),
+};
 
 const createMessageElement = ({ author, timestamp, body }, isOwnMessage) => {
   const msgContainer = document.createElement("div");
@@ -25,19 +31,18 @@ const createMessageElement = ({ author, timestamp, body }, isOwnMessage) => {
   const msgTime = document.createElement("p");
   msgTime.className = "msg-time";
   msgTime.textContent = formatDateFromTimestamp(timestamp);
-  msgContainer.append(msgText, msgAuthor, msgTime);
+  msgContainer.append(msgAuthor, msgText, msgTime);
   msgContainer.className = isOwnMessage ? "own-message" : "other-message";
-  chatMessages.appendChild(msgContainer);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  elements.chatMessages.appendChild(msgContainer);
+  elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
 };
 
-const outputMyMessage = (message) => createMessageElement(message, true);
+const outputMessage = (message, isOwnMessage) => createMessageElement(message, isOwnMessage);
 
-const outputSomeoneMessage = (message) => createMessageElement(message, false);
-
-fetch("/chat/server")
-  .then((res) => res.text())
-  .then((url) => {
+(async () => {
+  try {
+    const res = await fetch("/chat/server");
+    const url = await res.text();
     const [server, query] = url.split("?");
     const user = Object.fromEntries(new URLSearchParams(query));
     const ws = new WebSocket(server);
@@ -56,17 +61,24 @@ fetch("/chat/server")
         const chatCell = document.createElement("div");
         chatCell.id = id;
         chatCell.textContent = chat.chatName;
-        chatCell.className = "room";
-        chatRooms.appendChild(chatCell);
+        chatCell.classList.add("room", "in-room");
+        elements.chatRooms.appendChild(chatCell);
+        chatCell.addEventListener("click", () => showMessagesFromRoom(chatCell));
       });
+    });
+
+    eventEmitter.onEvent("CHAT_HISTORY", (data) => {
+      const { history } = data;
+      const { chatId, messages } = history;
+      chats[chatId].messages = messages;
+      messages.forEach((message) => outputMessage(message, message.author === user.name));
     });
 
     eventEmitter.onEvent("CHAT_MESSAGE", (data) => {
       const { message } = data;
       chats[message.chatId].messages.push(message);
       if (message.chatId === currentChatId) {
-        if (message.author === user.name) outputMyMessage(message);
-        else outputSomeoneMessage(message);
+        outputMessage(message, message.author === user.name);
       }
     });
 
@@ -82,85 +94,180 @@ fetch("/chat/server")
       alert(obj.reason);
     });
 
-    chatRooms.addEventListener("click", (event) => {
-      if (event.target && event.target.classList.contains("room")) {
-        console.log(event.target.id);
-        if (!currentChatId) {
-          msgToChooseRoom.style.setProperty("display", "none");
-          msgSending.style.setProperty("visibility", "visible");
-        }
-        currentChatId = parseInt(event.target.id, 10);
-        chatMessages.innerHTML = "";
-        const { messages } = chats[event.target.id];
-        messages.forEach((message) => {
-          if (message.author === user.name) outputMyMessage(message);
-          else outputSomeoneMessage(message);
-        });
-      }
-    });
-
-    btnSend.addEventListener("click", () => {
-      const body = input.value;
+    elements.btnSend.addEventListener("click", () => {
+      const body = elements.msgInput.value;
       if (body) {
         ws.send(
           JSON.stringify({
             event: "NEW_MESSAGE",
             message: { body, chatId: currentChatId },
-          }),
+          })
         );
-        input.value = "";
+        elements.msgInput.value = "";
       }
     });
 
-    bntAccount.addEventListener("click", () => {
+    elements.bntAccount.addEventListener("click", () => {
       ws.close();
       window.location.href = "/account";
     });
 
-    btnNewRoom.addEventListener("click", () => {
-      const newRoom = document.createElement("div");
-      const newRoomName = prompt("Enter a room name");
-      newRoom.textContent = newRoomName;
-      newRoom.className = "room";
-      chatRooms.appendChild(newRoom);
-      fetch(`/chat/create?chatName=${newRoomName}`, {
-        method: "POST",
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          newRoom.id = data.chatId;
-          chats[newRoom.id] = {};
-          chats[newRoom.id].messages = [];
-          ws.send(JSON.stringify({ event: "NEW_CHAT", user }));
-          console.log(data.message);
-        })
-        .catch((error) => {
-          console.error(error);
+    const showMessagesFromRoom = (room) => {
+      if (!currentChatId) {
+        elements.msgToChooseRoom.style.setProperty("display", "none");
+        elements.msgSending.style.setProperty("visibility", "visible");
+      }
+      currentChatId = parseInt(room.id, 10);
+      elements.chatMessages.innerHTML = "";
+      const { messages } = chats[room.id];
+      messages.forEach((message) => outputMessage(message, message.author === user.name));
+    };
+
+    elements.btnNewRoom.addEventListener("click", async () => {
+      try {
+        const newRoomName = await getGroupName();
+        const newRoom = document.createElement("div");
+        newRoom.textContent = newRoomName;
+        newRoom.classList.add('room', 'in-room');
+        elements.chatRooms.appendChild(newRoom);
+        newRoom.addEventListener("click", () => showMessagesFromRoom(newRoom));
+        const response = await fetch(`/chat/create?chatName=${newRoomName}`, {
+          method: "POST",
         });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        newRoom.id = data.chatId;
+        chats[newRoom.id] = {};
+        chats[newRoom.id].messages = [];
+        ws.send(JSON.stringify({ event: "NEW_CHAT", chat: { chatId: data.chatId } }));
+        console.log(data.message);
+      } catch (error) {
+        console.error(error);
+      }
     });
 
-    // searchButton.addEventListener("click", () => {
-    //   const roomName = searchInput.value;
-    //   fetch(`/chat/search?chatName=${roomName}`, {
-    //     method: "GET",
-    //   })
-    //     .then((response) => {
-    //       if (!response.ok) {
-    //         throw new Error(`HTTP error! Status: ${response.status}`);
-    //       }
-    //       return response.json();
-    //     })
-    //     .then((data) => {
-    //       ws.send(JSON.stringify({ event: "CHAT_JOINING", user }));
-    //       console.log(data.message);
-    //     })
-    //     .catch((error) => {
-    //       console.error(error);
-    //     });
-    // });
+    elements.searchButton.addEventListener("click", async () => {
+      const roomName = elements.searchInput.value;
+      await startRoomSearch(roomName);
+    });
+
+    const startRoomSearch = async (roomName) => {
+      try {
+        const response = await fetch(`/chat/search?chatName=${roomName}`, {
+          method: "GET",
+        });
+        if (!response.ok) {
+          alert('There is no room with this name');
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        handleFindPressed();
+        const availableRooms = document.querySelectorAll('.in-room');
+        availableRooms.forEach(room => {
+          room.style.setProperty('display', 'none');
+        });
+        const reminder = document.createElement('p');
+        if (data.chatId in chats) {
+          const room = document.getElementById(data.chatId);
+          room.style.setProperty('display', 'flex');
+          reminder.textContent = "You're already in";
+          room.appendChild(reminder);
+        } else {
+          let room = document.createElement("div");
+          room.textContent = roomName;
+          room.classList.add('room', 'not-in-room');
+          reminder.textContent = "You can join";
+          room.appendChild(reminder);
+          elements.chatRooms.appendChild(room);
+          room.addEventListener("click", () => {
+            room.remove();
+            handleRoomJoining(roomName, data.chatId);
+          });
+        }
+        console.log(data.message);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const handleRoomJoining = (roomName, roomId) => {
+      const room = document.createElement("div");
+      room.textContent = roomName;
+      room.classList.add('room', 'in-room');
+      elements.chatRooms.appendChild(room);
+      const availableRooms = document.querySelectorAll('.in-room');
+      availableRooms.forEach(room => {
+        room.style.setProperty('display', 'flex');
+      });
+      if (!currentChatId) {
+        elements.msgToChooseRoom.style.setProperty("display", "none");
+        elements.msgSending.style.setProperty("visibility", "visible");
+      }
+      fetchChatJoining(room, roomId);
+      room.addEventListener("click", () => showMessagesFromRoom(room));
+      elements.chatMessages.innerHTML = "";
+    };
+
+    const fetchChatJoining = async (roomEl, roomId) => {
+      try {
+        const response = await fetch(`/chat/join?chatId=${roomId}`, {
+          method: "POST",
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const res = await response.json();
+        roomEl.id = roomId;
+        chats[roomEl.id] = { messages: [] };
+        currentChatId = parseInt(roomId, 10);
+        ws.send(JSON.stringify({ event: "CHAT_JOINING", chat: { chatId: roomId } }));
+        console.log(res.message);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  } catch (error) {
+    console.error(error);
+  }
+})();
+
+const handleFindPressed = () => {
+  elements.searchPanel.style.setProperty("display", "none");
+  const backBtn = document.createElement("button");
+  backBtn.className = "back-btn";
+  backBtn.textContent = "< Back";
+  elements.chatsHistory.prepend(backBtn);
+  backBtn.addEventListener("click", () => {
+    elements.searchPanel.style.setProperty("display", "flex");
+    backBtn.remove();
+    const notInRoom = document.querySelector('.not-in-room');
+    if (notInRoom) notInRoom.remove();
+    const reminder = document.querySelector('.in-room p');
+    if (reminder) reminder.remove();
+    const inRooms = document.querySelectorAll('.in-room');
+    inRooms.forEach(room => {
+      room.style.setProperty('display', 'flex');
+    });
   });
+};
+
+const getGroupName = () => {
+  return new Promise((resolve, reject) => {
+    elements.modal.style.display = 'flex';
+    window.onclick = (event) => {
+      if (event.target == elements.modal) {
+        elements.modal.style.display = 'none';
+        reject('Window is closed');
+      }
+    };
+    elements.createGroupBtn.addEventListener("click", () => {
+      const groupName = document.getElementById('groupName').value;
+      if (groupName) {
+        elements.modal.style.display = 'none';
+        resolve(groupName);
+      }
+    });
+  });
+};
